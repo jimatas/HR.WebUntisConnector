@@ -4,7 +4,7 @@
 namespace HR.WebUntisConnector.Model
 {
     /// <summary>
-    /// Represents a department that some elements, such as rooms and teachers, can be associated with.
+    /// Represents a department that certain elements, such as rooms and teachers, can be associated with.
     /// </summary>
     public class Department
     {
