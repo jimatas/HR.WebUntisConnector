@@ -72,7 +72,7 @@ namespace HR.WebUntisConnector.JsonRpc
         {
             var httpRequest = CreateRequestMessage(jsonRpcRequest);
 
-            var httpResponse = await httpClient.SendAsync(httpRequest).WithoutCapturingContext();
+            var httpResponse = await httpClient.SendAsync(httpRequest, cancellationToken).WithoutCapturingContext();
             httpResponse.EnsureSuccessStatusCode();
 
             var jsonRpcResponse = await httpResponse.Content.ReadFromJsonAsync<JsonRpcResponse<TResult>>(serializerOptions, cancellationToken).WithoutCapturingContext();
