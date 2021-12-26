@@ -14,7 +14,7 @@ namespace HR.WebUntisConnector
     public interface IApiClient
     {
         /// <summary>
-        /// Indicates whether a session was already started for the authenticated user.
+        /// Indicates whether a session has already been started for the authenticated user.
         /// </summary>
         bool IsAuthenticated { get; }
 
