@@ -77,7 +77,7 @@ namespace HR.WebUntisConnector
         /// <param name="parameters">Specifies the school year for which to retrieve classes.</param>
         /// <param name="cancellationToken">The cancellation token to observe.</param>
         /// <returns>An awaitable task that, when completed, will return an enumerable collection containing the classes that were retrieved.</returns>
-        Task<IEnumerable<Model.Klasse>> GetKlassen(Model.KlasseParameters parameters, CancellationToken cancellationToken = default);
+        Task<IEnumerable<Model.Klasse>> GetKlassenAsync(Model.KlasseParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieves all classrooms from WebUntis.
