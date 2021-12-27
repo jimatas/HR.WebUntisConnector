@@ -6,7 +6,7 @@ using System;
 namespace HR.WebUntisConnector
 {
     /// <summary>
-    /// Thrown by the <see cref="JsonRpcApiClient"/> class when an API method is invoked before a call to <see cref="IApiClient.LogInAsync(string, string, System.Threading.CancellationToken)"/>.
+    /// Thrown by the <see cref="ApiClient"/> class when an API method is invoked before a call to <see cref="IApiClient.LogInAsync(string, string, System.Threading.CancellationToken)"/>.
     /// </summary>
     public class UnauthenticatedException : Exception
     {

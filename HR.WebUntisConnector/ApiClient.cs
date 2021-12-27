@@ -13,17 +13,17 @@ using System.Threading.Tasks;
 namespace HR.WebUntisConnector
 {
     /// <summary>
-    /// Default JSON-RPC based implementation of the <see cref="IApiClient"/> interface.
+    /// Default implementation of the <see cref="IApiClient"/> interface that communicates directly with the WebUntis JSON-RPC service.
     /// </summary>
-    public class JsonRpcApiClient : IApiClient
+    public class ApiClient : IApiClient
     {
         private readonly JsonRpcClient jsonRpcClient;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JsonRpcApiClient"/> class.
+        /// Initializes a new instance of the <see cref="ApiClient"/> class.
         /// </summary>
-        /// <param name="jsonRpcClient">The JSON-RPC client to use for connecting to the API.</param>
-        public JsonRpcApiClient(JsonRpcClient jsonRpcClient)
+        /// <param name="jsonRpcClient">The JSON-RPC client to use for connecting to the WebUntis API.</param>
+        public ApiClient(JsonRpcClient jsonRpcClient)
             => this.jsonRpcClient = jsonRpcClient ?? throw new ArgumentNullException(nameof(jsonRpcClient));
 
         /// <inheritdoc/>
