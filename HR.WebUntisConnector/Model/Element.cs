@@ -1,8 +1,6 @@
 ﻿// Copyright (c) 2019-2021 Jim Atas, Rotterdam University of Applied Sciences. All rights reserved.
 // This source file is part of WebUntisConnector, which is proprietary software of Rotterdam University of Applied Sciences.
 
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace HR.WebUntisConnector.Model
@@ -23,6 +21,11 @@ namespace HR.WebUntisConnector.Model
         public virtual int Id { get; set; }
 
         /// <summary>
+        /// The ID of the element in the source system.
+        /// </summary>
+        public virtual string ExternalKey { get; set; }
+
+        /// <summary>
         /// The name of this element.
         /// </summary>
         public virtual string Name { get; set; }
@@ -31,19 +34,6 @@ namespace HR.WebUntisConnector.Model
         /// The full name of this element.
         /// </summary>
         public virtual string LongName { get; set; }
-
-        /// <summary>
-        /// Not meant for public use. 
-        /// Use <see cref="LongName"/> instead.
-        /// </summary>
-        [JsonPropertyName("longname")]
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual string Longname
-        {
-            get => LongName;
-            set => LongName = value;
-        }
 
         /// <summary>
         /// Is this element active?

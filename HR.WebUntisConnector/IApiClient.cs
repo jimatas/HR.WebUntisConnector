@@ -19,7 +19,7 @@ namespace HR.WebUntisConnector
         bool IsAuthenticated { get; }
 
         /// <summary>
-        /// Log in on the WebUntis API using the specified username and password.
+        /// Logs in on the WebUntis API using the specified username and password.
         /// This is the first method that should be called, before any other API method.
         /// </summary>
         /// <param name="userName">The username to authenticate with.</param>
@@ -29,7 +29,7 @@ namespace HR.WebUntisConnector
         Task LogInAsync(string userName, string password, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Log out of the WebUntis API, ending the session of the authenticated user.
+        /// Logs out of the WebUntis API, thereby ending the session of the authenticated user.
         /// It is good practice to finish up your work by calling this method.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token to observe.</param>
