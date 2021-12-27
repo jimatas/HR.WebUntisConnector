@@ -4,8 +4,6 @@
 using HR.WebUntisConnector.Configuration;
 using HR.WebUntisConnector.JsonRpc;
 
-using Microsoft.Extensions.DependencyInjection;
-
 using System;
 using System.Configuration;
 using System.Linq;
@@ -15,30 +13,30 @@ using System.Text.Json;
 namespace HR.WebUntisConnector.DependencyInjection
 {
     /// <summary>
-    /// Default implementation of the <see cref="IApiClientFactory"/> interface that uses the system DI container to resolve <see cref="IApiClient"/> objects.
+    /// Default implementation of the <see cref="IApiClientFactory"/> interface that creates JSON-RPC based <see cref="IApiClient"/> objects.
     /// </summary>
     public class ApiClientFactory : IApiClientFactory
     {
+        private readonly IHttpClientFactory httpClientFactory;
+        private readonly JsonSerializerOptions serializerOptions;
         private readonly WebUntisConfigurationSection configuration;
-        private readonly IServiceProvider serviceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClientFactory"/> class.
         /// </summary>
-        /// <param name="serviceProvider"></param>
+        /// <param name="httpClientFactory"></param>
+        /// <param name="serializerOptions"></param>
         /// <param name="configuration"></param>
-        public ApiClientFactory(IServiceProvider serviceProvider, WebUntisConfigurationSection configuration)
+        public ApiClientFactory(IHttpClientFactory httpClientFactory, JsonSerializerOptions serializerOptions, WebUntisConfigurationSection configuration)
         {
-            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+            this.serializerOptions = serializerOptions ?? throw new ArgumentNullException(nameof(serializerOptions));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         /// <inheritdoc/>
         public IApiClient CreateApiClient(string schoolOrInstituteName, out string userName, out string password)
         {
-            var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
-            var serializerOptions = serviceProvider.GetRequiredService<JsonSerializerOptions>();
-
             GetConfigurationSettings(schoolOrInstituteName, out var schoolName, out userName, out password);
             var httpClient = httpClientFactory.CreateClient(schoolName);
 

@@ -32,22 +32,16 @@ namespace HR.WebUntisConnector.DependencyInjection
                 }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false });
             }
 
-            services.AddSingleton(_ => CreateDefaultSerializerOptions());
-            services.AddScoped<IApiClientFactory, ApiClientFactory>(provider => new ApiClientFactory(provider, configuration));
+            services.AddScoped<IApiClientFactory, ApiClientFactory>(provider => new ApiClientFactory(provider.GetRequiredService<IHttpClientFactory>(), CreateDefaultSerializerOptions(), configuration));
 
             return services;
 
-            JsonSerializerOptions CreateDefaultSerializerOptions()
+            JsonSerializerOptions CreateDefaultSerializerOptions() => new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
-                var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    WriteIndented = true,
-                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                    AllowTrailingCommas = true
-                };
-
-                return options;
-            }
+                WriteIndented = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                AllowTrailingCommas = true
+            };
         }
     }
 }
