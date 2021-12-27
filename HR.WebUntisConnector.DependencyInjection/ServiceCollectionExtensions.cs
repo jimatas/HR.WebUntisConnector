@@ -19,12 +19,13 @@ namespace HR.WebUntisConnector.DependencyInjection
         {
             foreach (var school in configuration.Schools)
             {
-                var serviceUrl = string.Format(string.IsNullOrEmpty(school.ServiceUrl) ? configuration.ServiceUrl : school.ServiceUrl, school.Name);
+                var serviceUrl = string.IsNullOrEmpty(school.ServiceUrl) ? configuration.ServiceUrl : school.ServiceUrl;
                 if (string.IsNullOrEmpty(serviceUrl))
                 {
                     throw new ConfigurationErrorsException("The serviceUrl setting is required. "
                         + "It must be specified on the <webuntis> root element or as a possible override on any of the <school> elements under it.");
                 }
+                serviceUrl = string.Format(serviceUrl, school.Name);
 
                 services.AddHttpClient(school.Name, httpClient =>
                 {
