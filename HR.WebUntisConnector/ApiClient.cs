@@ -21,7 +21,7 @@ namespace HR.WebUntisConnector
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient"/> class.
         /// </summary>
-        /// <param name="jsonRpcClient">The JSON-RPC client to use for connecting to the WebUntis API.</param>
+        /// <param name="jsonRpcClient">The JSON-RPC client to use for connecting to the WebUntis API and calling its methods.</param>
         public ApiClient(JsonRpcClient jsonRpcClient)
             => this.jsonRpcClient = jsonRpcClient ?? throw new ArgumentNullException(nameof(jsonRpcClient));
 
