@@ -129,7 +129,7 @@ namespace HR.WebUntisConnector
         /// <param name="parameters">The parameters by which to determine the timetables to return.</param>
         /// <param name="cancellationToken">The cancellation token to observe.</param>
         /// <returns>An awaitable task that, when completed, will return an enumerable collection containing the timetables that were retrieved.</returns>
-        Task<IEnumerable<Timetable>> GetTimetablesAync(TimetableParameters parameters, CancellationToken cancellationToken = default);
+        Task<IEnumerable<Timetable>> GetTimetablesAsync(TimetableParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieves all comprehensive timetables that match the specified criteria from WebUntis.

@@ -165,7 +165,7 @@ namespace HR.WebUntisConnector
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Timetable>> GetTimetablesAync(TimetableParameters parameters, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Timetable>> GetTimetablesAsync(TimetableParameters parameters, CancellationToken cancellationToken = default)
         {
             EnsureAuthenticated();
 
