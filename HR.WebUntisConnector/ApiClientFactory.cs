@@ -10,7 +10,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 
-namespace HR.WebUntisConnector.DependencyInjection
+namespace HR.WebUntisConnector
 {
     /// <summary>
     /// Default implementation of the <see cref="IApiClientFactory"/> interface that creates JSON-RPC based <see cref="IApiClient"/> objects.
