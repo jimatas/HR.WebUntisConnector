@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace HR.WebUntisConnector.Extensions
 {
+    /// <summary>
+    /// Some useful extension methods on the <see cref="IApiClient"/> interface.
+    /// </summary>
     public static class ApiClientExtensions
     {
         /// <summary>
@@ -62,7 +65,7 @@ namespace HR.WebUntisConnector.Extensions
         /// <returns>An awaitable task that, when completed, will return the timetables that matched the specified criteria and, if <paramref name="elementType"/> is <see cref="ElementType.Klasse"/>, a collection containing the element ID of the <see cref="Klasse"/> object for each school year that the date range falls in.</returns>
         public static async Task<(IEnumerable<Timetable> Timetables, IEnumerable<int> ElementIds)> GetTimetablesAsync(this IApiClient apiClient, ElementType elementType, int elementId, DateTime startDate, DateTime endDate, CancellationToken cancellationToken = default)
         {
-            var timetables = new List<Model.Timetable>();
+            var timetables = new List<Timetable>();
             var elementIds = new HashSet<int>() { elementId };
 
             foreach (var period in (await apiClient.GetSchoolYearsAsync(cancellationToken).ConfigureAwait(false)).ToDateTimeRanges(startDate, endDate))
