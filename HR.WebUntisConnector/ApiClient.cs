@@ -2,7 +2,6 @@
 // This source file is part of WebUntisConnector, which is proprietary software of Rotterdam University of Applied Sciences.
 
 using HR.WebUntisConnector.JsonRpc;
-using HR.WebUntisConnector.JsonRpc.Extensions;
 using HR.WebUntisConnector.Model;
 
 using System;
@@ -44,7 +43,7 @@ namespace HR.WebUntisConnector
                     Password = password
                 },
                 cancellationToken
-            ).WithoutCapturingContext();
+            ).ConfigureAwait(false);
 
             IsAuthenticated = !string.IsNullOrEmpty(authenticateResult?.SessionId);
             if (IsAuthenticated)
@@ -62,7 +61,7 @@ namespace HR.WebUntisConnector
             }
 
             // Logout used to be a notification, but WebUntis was returning a parse error (id=null).
-            IsAuthenticated = await GetResultAsync<object>("logout", cancellationToken).WithoutCapturingContext() != null;
+            IsAuthenticated = await GetResultAsync<object>("logout", cancellationToken).ConfigureAwait(false) != null;
             if (!IsAuthenticated)
             {
                 jsonRpcClient.SessionId = null;
@@ -74,7 +73,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return DateTimeOffset.FromUnixTimeMilliseconds(await GetResultAsync<long>("getLatestImportTime", cancellationToken).WithoutCapturingContext()).LocalDateTime;
+            return DateTimeOffset.FromUnixTimeMilliseconds(await GetResultAsync<long>("getLatestImportTime", cancellationToken).ConfigureAwait(false)).LocalDateTime;
         }
 
         /// <inheritdoc/>
@@ -82,7 +81,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Department>>("getDepartments", cancellationToken).WithoutCapturingContext();
+            return await GetResultAsync<IEnumerable<Department>>("getDepartments", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -90,7 +89,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Teacher>>("getTeachers", cancellationToken).WithoutCapturingContext();
+            return await GetResultAsync<IEnumerable<Teacher>>("getTeachers", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -98,7 +97,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Student>>("getStudents", cancellationToken).WithoutCapturingContext();
+            return await GetResultAsync<IEnumerable<Student>>("getStudents", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -106,7 +105,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Klasse>>("getKlassen", cancellationToken).WithoutCapturingContext();
+            return await GetResultAsync<IEnumerable<Klasse>>("getKlassen", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -114,7 +113,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<KlasseParameters, IEnumerable<Klasse>>("getKlassen", parameters, cancellationToken).WithoutCapturingContext();
+            return await GetResultAsync<KlasseParameters, IEnumerable<Klasse>>("getKlassen", parameters, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -122,7 +121,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Room>>("getRooms", cancellationToken).WithoutCapturingContext();
+            return await GetResultAsync<IEnumerable<Room>>("getRooms", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -130,7 +129,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Subject>>("getSubjects", cancellationToken).WithoutCapturingContext();
+            return await GetResultAsync<IEnumerable<Subject>>("getSubjects", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -138,7 +137,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Holiday>>("getHolidays", cancellationToken).WithoutCapturingContext();
+            return await GetResultAsync<IEnumerable<Holiday>>("getHolidays", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -146,7 +145,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<SchoolYear>>("getSchoolyears", cancellationToken).WithoutCapturingContext();
+            return await GetResultAsync<IEnumerable<SchoolYear>>("getSchoolyears", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -154,7 +153,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<SchoolYear>("getCurrentSchoolyear", cancellationToken).WithoutCapturingContext();
+            return await GetResultAsync<SchoolYear>("getCurrentSchoolyear", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -162,7 +161,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<TimegridUnits>>("getTimegridUnits", cancellationToken).WithoutCapturingContext();
+            return await GetResultAsync<IEnumerable<TimegridUnits>>("getTimegridUnits", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -170,7 +169,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<TimetableParameters, IEnumerable<Timetable>>("getTimetable", parameters, cancellationToken).WithoutCapturingContext();
+            return await GetResultAsync<TimetableParameters, IEnumerable<Timetable>>("getTimetable", parameters, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -178,7 +177,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<ComprehensiveTimetableParameters, IEnumerable<Timetable>>("getTimetable", parameters, cancellationToken).WithoutCapturingContext();
+            return await GetResultAsync<ComprehensiveTimetableParameters, IEnumerable<Timetable>>("getTimetable", parameters, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -194,7 +193,7 @@ namespace HR.WebUntisConnector
         /// <param name="method">The API method to call.</param>
         /// <returns>The retrieved item(s).</returns>
         private async Task<TResult> GetResultAsync<TResult>(string method, CancellationToken cancellationToken) 
-            => await GetResultAsync<object, TResult>(method, parameters: null, cancellationToken).WithoutCapturingContext();
+            => await GetResultAsync<object, TResult>(method, parameters: null, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Retrieves one or more items of the specified type from WebUntis.
@@ -208,7 +207,7 @@ namespace HR.WebUntisConnector
         {
             try
             {
-                return await jsonRpcClient.InvokeAsync<TParams, TResult>(method, parameters, cancellationToken).WithoutCapturingContext();
+                return await jsonRpcClient.InvokeAsync<TParams, TResult>(method, parameters, cancellationToken).ConfigureAwait(false);
             }
             catch (JsonRpcException exception)
             {

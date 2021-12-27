@@ -1,7 +1,6 @@
 ﻿// Copyright (c) 2019-2021 Jim Atas, Rotterdam University of Applied Sciences. All rights reserved.
 // This source file is part of WebUntisConnector, which is proprietary software of Rotterdam University of Applied Sciences.
 
-using HR.WebUntisConnector.JsonRpc.Extensions;
 using HR.WebUntisConnector.JsonRpc.Infrastructure;
 
 using System;
@@ -72,10 +71,10 @@ namespace HR.WebUntisConnector.JsonRpc
         {
             var httpRequest = CreateRequestMessage(jsonRpcRequest);
 
-            var httpResponse = await httpClient.SendAsync(httpRequest, cancellationToken).WithoutCapturingContext();
+            var httpResponse = await httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
             httpResponse.EnsureSuccessStatusCode();
 
-            var jsonRpcResponse = await httpResponse.Content.ReadFromJsonAsync<JsonRpcResponse<TResult>>(serializerOptions, cancellationToken).WithoutCapturingContext();
+            var jsonRpcResponse = await httpResponse.Content.ReadFromJsonAsync<JsonRpcResponse<TResult>>(serializerOptions, cancellationToken).ConfigureAwait(false);
             return jsonRpcResponse;
         }
 
@@ -97,7 +96,7 @@ namespace HR.WebUntisConnector.JsonRpc
                 Parameters = parameters
             };
 
-            var jsonRpcResponse = await InvokeAsync<TParams, TResult>(jsonRpcRequest, cancellationToken).WithoutCapturingContext();
+            var jsonRpcResponse = await InvokeAsync<TParams, TResult>(jsonRpcRequest, cancellationToken).ConfigureAwait(false);
             if (jsonRpcResponse.Error is null)
             {
                 if (jsonRpcResponse.Id.Equals(jsonRpcRequest.Id))
@@ -119,7 +118,7 @@ namespace HR.WebUntisConnector.JsonRpc
         /// <param name="cancellationToken">The cancellation token to observe.</param>
         /// <returns>An awaitable task that, when completed, will return the result returned by the server.</returns>
         public async Task<TResult> InvokeAsync<TResult>(string method, CancellationToken cancellationToken = default)
-            => await InvokeAsync<object, TResult>(method, parameters: null, cancellationToken).WithoutCapturingContext();
+            => await InvokeAsync<object, TResult>(method, parameters: null, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Invokes a JSON-RPC method that does not return a result, or the result can be discarded.
@@ -129,7 +128,7 @@ namespace HR.WebUntisConnector.JsonRpc
         /// <param name="cancellationToken">The cancellation token to observe.</param>
         /// <returns>An awaitable task that represents the asynchronous operation.</returns>
         public async Task NotifyAsync<TParams>(JsonRpcNotification<TParams> jsonRpcNotification, CancellationToken cancellationToken = default)
-            => (await httpClient.PostAsJsonAsync((Uri)null, jsonRpcNotification, cancellationToken).WithoutCapturingContext()).EnsureSuccessStatusCode();
+            => (await httpClient.PostAsJsonAsync((Uri)null, jsonRpcNotification, cancellationToken).ConfigureAwait(false)).EnsureSuccessStatusCode();
 
         /// <summary>
         /// Invokes a JSON-RPC method that does not return a result, or the result can be discarded.
@@ -147,7 +146,7 @@ namespace HR.WebUntisConnector.JsonRpc
                 Parameters = parameters
             };
 
-            await NotifyAsync(jsonRpcNotification, cancellationToken).WithoutCapturingContext();
+            await NotifyAsync(jsonRpcNotification, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -157,7 +156,7 @@ namespace HR.WebUntisConnector.JsonRpc
         /// <param name="cancellationToken">The cancellation token to observe.</param>
         /// <returns>An awaitable task that represents the asynchronous operation.</returns>
         public async Task NotifyAsync(string method, CancellationToken cancellationToken = default)
-            => await NotifyAsync(method, parameters: (object)null, cancellationToken).WithoutCapturingContext();
+            => await NotifyAsync(method, parameters: (object)null, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Creates a new HttpRequestMessage object that has its Content property set to the JSON serialized representation of the specified JsonRpcRequest object 
