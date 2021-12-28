@@ -15,7 +15,14 @@ namespace HR.WebUntisConnector.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddApiClientFactory(this IServiceCollection services, WebUntisConfigurationSection configuration)
+        /// <summary>
+        /// Adds an <see cref="IApiClientFactory"/> to the service collection using the provided configuration and with the specified service lifetime.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <param name="serviceLifetime">The service lifetime to register the <see cref="IApiClientFactory"/> with.</param>
+        /// <returns></returns>
+        public static IServiceCollection AddApiClientFactory(this IServiceCollection services, WebUntisConfigurationSection configuration, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
         {
             foreach (var school in configuration.Schools)
             {
@@ -33,7 +40,10 @@ namespace HR.WebUntisConnector.DependencyInjection
                 }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false });
             }
 
-            services.AddScoped<IApiClientFactory, ApiClientFactory>(provider => new ApiClientFactory(provider.GetRequiredService<IHttpClientFactory>(), CreateDefaultSerializerOptions(), configuration));
+            services.Add(new ServiceDescriptor(
+                serviceType: typeof(IApiClientFactory),
+                provider => new ApiClientFactory(provider.GetRequiredService<IHttpClientFactory>(), CreateDefaultSerializerOptions(), configuration),
+                serviceLifetime));
 
             return services;
 
