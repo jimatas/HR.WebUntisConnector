@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2019-2021 Jim Atas, Rotterdam University of Applied Sciences. All rights reserved.
 // This source file is part of WebUntisConnector, which is proprietary software of Rotterdam University of Applied Sciences.
 
+using System.Text.Json.Serialization;
+
 namespace HR.WebUntisConnector.Model
 {
     /// <summary>
@@ -9,6 +11,7 @@ namespace HR.WebUntisConnector.Model
     public class Subject : Element
     {
         /// <inheritdoc/>
+        [JsonIgnore]
         public override ElementType Type => ElementType.Subject;
 
         /// <summary>

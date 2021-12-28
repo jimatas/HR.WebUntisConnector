@@ -13,6 +13,7 @@ namespace HR.WebUntisConnector.Model
     public class Teacher : Element
     {
         /// <inheritdoc/>
+        [JsonIgnore]
         public override ElementType Type => ElementType.Teacher;
 
         /// <summary>

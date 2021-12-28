@@ -11,6 +11,7 @@ namespace HR.WebUntisConnector.Model
     public class Student : Element
     {
         /// <inheritdoc/>
+        [JsonIgnore]
         public override ElementType Type => ElementType.Student;
 
         /// <summary>

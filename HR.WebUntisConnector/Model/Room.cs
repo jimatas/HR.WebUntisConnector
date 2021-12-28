@@ -13,6 +13,7 @@ namespace HR.WebUntisConnector.Model
     public class Room : Element
     {
         /// <inheritdoc/>
+        [JsonIgnore]
         public override ElementType Type => ElementType.Room;
 
         /// <summary>
