@@ -54,7 +54,7 @@ namespace HR.WebUntisConnector.Extensions
 
         /// <summary>
         /// Retrieves all the timetables for the element with the specified type and ID that fall between the specified start and end dates.
-        /// This method will provide all the available information in WebUntis in the returned timetables.
+        /// This method will return all the available information in WebUntis in the retrieved timetables.
         /// </summary>
         /// <param name="apiClient"></param>
         /// <param name="elementType"></param>
