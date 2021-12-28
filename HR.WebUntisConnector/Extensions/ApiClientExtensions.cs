@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace HR.WebUntisConnector.Extensions
 {
     /// <summary>
-    /// Some useful extension methods on the <see cref="IApiClient"/> interface.
+    /// Defines some useful extension methods on the <see cref="IApiClient"/> interface.
     /// </summary>
     public static class ApiClientExtensions
     {
