@@ -16,10 +16,10 @@ namespace HR.WebUntisConnector.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds an <see cref="IApiClientFactory"/> to the service collection using the provided configuration and with the specified service lifetime.
+        /// Adds an <see cref="IApiClientFactory"/> to the service collection using the specified configuration and service lifetime.
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="configuration"></param>
+        /// <param name="configuration">Configuration data for the <see cref="IApiClient"/> objects that will be created.</param>
         /// <param name="serviceLifetime">The service lifetime to register the <see cref="IApiClientFactory"/> with.</param>
         /// <returns></returns>
         public static IServiceCollection AddApiClientFactory(this IServiceCollection services, WebUntisConfigurationSection configuration, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
