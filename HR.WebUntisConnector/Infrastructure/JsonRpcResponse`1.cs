@@ -3,7 +3,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace HR.WebUntisConnector.JsonRpc
+namespace HR.WebUntisConnector.Infrastructure
 {
     /// <summary>
     /// Encapsulates the response returned by the JSON-RPC service.

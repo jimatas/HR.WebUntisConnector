@@ -13,6 +13,9 @@ using System.Text.Json.Serialization;
 
 namespace HR.WebUntisConnector.DependencyInjection
 {
+    /// <summary>
+    /// Extension methods on <see cref="IServiceCollection"/> to register <see cref="IApiClientFactory"/> as a service.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>

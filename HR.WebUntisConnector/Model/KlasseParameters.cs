@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 namespace HR.WebUntisConnector.Model
 {
     /// <summary>
-    /// The parameters to the overloaded GetKlassen method.
+    /// The parameters to the overloaded <c>getKlassen</c> method.
     /// </summary>
     public class KlasseParameters
     {

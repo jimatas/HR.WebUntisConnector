@@ -6,7 +6,7 @@ using System;
 namespace HR.WebUntisConnector
 {
     /// <summary>
-    /// Thrown by the <see cref="ApiClient"/> class when an API method is invoked before a call to <see cref="IApiClient.LogInAsync(string, string, System.Threading.CancellationToken)"/>.
+    /// This exception is thrown by the methods of the <see cref="ApiClient"/> class when they are invoked before <see cref="ApiClient.LogInAsync(string, string, System.Threading.CancellationToken)"/> has been called first.
     /// </summary>
     public class UnauthenticatedException : Exception
     {

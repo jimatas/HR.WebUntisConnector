@@ -3,7 +3,7 @@
 
 using System;
 
-namespace HR.WebUntisConnector.JsonRpc
+namespace HR.WebUntisConnector.Infrastructure
 {
     /// <summary>
     /// Thrown to indicate that an error occurred in one of the methods of <see cref="JsonRpcClient"/> class that do not return a <see cref="JsonRpcResponse{TResult}"/>.

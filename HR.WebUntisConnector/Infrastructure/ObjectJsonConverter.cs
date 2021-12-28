@@ -5,10 +5,14 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace HR.WebUntisConnector.JsonRpc.Infrastructure
+namespace HR.WebUntisConnector.Infrastructure
 {
-    internal class ObjectJsonConverter : JsonConverter<object>
+    /// <summary>
+    /// A JSON converter that can read System.Object typed values.
+    /// </summary>
+    public class ObjectJsonConverter : JsonConverter<object>
     {
+        /// <inheritdoc/>
         public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var tokenType = reader.TokenType;
@@ -51,6 +55,7 @@ namespace HR.WebUntisConnector.JsonRpc.Infrastructure
             }
         }
 
+        /// <inheritdoc/>
         public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
             => throw new NotSupportedException("Directly writing System.Object is not supported.");
     }

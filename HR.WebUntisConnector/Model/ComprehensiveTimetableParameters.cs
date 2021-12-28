@@ -4,7 +4,7 @@
 namespace HR.WebUntisConnector.Model
 {
     /// <summary>
-    /// Encapsulates the parameters to the GetTimetable method overload that returns a comprehensive timetable.
+    /// Encapsulates the parameters to the <c>getTimetable</c> method overload that returns a comprehensive timetable.
     /// </summary>
     public class ComprehensiveTimetableParameters
     {

@@ -1,8 +1,6 @@
 ﻿// Copyright (c) 2019-2021 Jim Atas, Rotterdam University of Applied Sciences. All rights reserved.
 // This source file is part of WebUntisConnector, which is proprietary software of Rotterdam University of Applied Sciences.
 
-using HR.WebUntisConnector.JsonRpc.Infrastructure;
-
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -12,7 +10,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HR.WebUntisConnector.JsonRpc
+namespace HR.WebUntisConnector.Infrastructure
 {
     /// <summary>
     /// A client with which to call remote methods on a JSON-RPC service.
@@ -31,7 +29,7 @@ namespace HR.WebUntisConnector.JsonRpc
         static JsonRpcClient()
         {
             acceptHeader = new MediaTypeWithQualityHeaderValue("application/json-rpc");
-            userAgentHeader = new ProductInfoHeaderValue("HR.WebUntisConnector.JsonRpc.JsonRpcClient", "2.0");
+            userAgentHeader = new ProductInfoHeaderValue("HR.WebUntisConnector.Infrastructure.JsonRpcClient", "2.0");
         }
 
         /// <summary>

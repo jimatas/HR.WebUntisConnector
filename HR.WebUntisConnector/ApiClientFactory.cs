@@ -2,7 +2,7 @@
 // This source file is part of WebUntisConnector, which is proprietary software of Rotterdam University of Applied Sciences.
 
 using HR.WebUntisConnector.Configuration;
-using HR.WebUntisConnector.JsonRpc;
+using HR.WebUntisConnector.Infrastructure;
 
 using System;
 using System.Configuration;

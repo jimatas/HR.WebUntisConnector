@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 namespace HR.WebUntisConnector.Model
 {
     /// <summary>
-    /// The parameters to the Authenticate method.
+    /// The parameters to the <c>authenticate</c> method.
     /// </summary>
     public class AuthenticateParameters
     {

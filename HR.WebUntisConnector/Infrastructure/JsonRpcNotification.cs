@@ -3,7 +3,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace HR.WebUntisConnector.JsonRpc
+namespace HR.WebUntisConnector.Infrastructure
 {
     /// <summary>
     /// A notification is sent to the JSON-RPC service when no response is expected or desired.

@@ -6,7 +6,7 @@ using System;
 namespace HR.WebUntisConnector.Model
 {
     /// <summary>
-    /// Encapsulates the parameters to the GetTimetable method.
+    /// Encapsulates the parameters to the <c>getTimetable</c> method.
     /// </summary>
     public class TimetableParameters
     {
