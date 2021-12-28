@@ -191,7 +191,8 @@ namespace HR.WebUntisConnector
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="method">The API method to call.</param>
-        /// <returns>The retrieved item(s).</returns>
+        /// <param name="cancellationToken">The cancellation token to observe.</param>
+        /// <returns>An awaitable task that will return the retrieved item(s) when it completes.</returns>
         private async Task<TResult> GetResultAsync<TResult>(string method, CancellationToken cancellationToken) 
             => await GetResultAsync<object, TResult>(method, parameters: null, cancellationToken).ConfigureAwait(false);
 
@@ -202,7 +203,8 @@ namespace HR.WebUntisConnector
         /// <typeparam name="TResult"></typeparam>
         /// <param name="method">The API method to call.</param>
         /// <param name="parameters">The parameters to that method.</param>
-        /// <returns>The retrieved item(s).</returns>
+        /// <param name="cancellationToken">The cancellation token to observe.</param>
+        /// <returns>An awaitable task that will return the retrieved item(s) when it completes.</returns>
         private async Task<TResult> GetResultAsync<TParams, TResult>(string method, TParams parameters, CancellationToken cancellationToken)
         {
             try
