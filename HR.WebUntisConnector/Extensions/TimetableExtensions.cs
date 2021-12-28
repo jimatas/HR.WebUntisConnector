@@ -45,7 +45,7 @@ namespace HR.WebUntisConnector.Extensions
                 }
             }
 
-            return timetableGroups.OrderBy(table => table.Date).ThenBy(table => table.StartTime).ToArray();
+            return timetableGroups.OrderBy(group => group.Date).ThenBy(group => group.StartTime).ToArray();
 
             bool AreTimetablesAdjacent(Timetable first, Timetable second)
             {
