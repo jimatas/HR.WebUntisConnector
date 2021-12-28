@@ -13,6 +13,7 @@ namespace HR.WebUntisConnector.Model
         /// <summary>
         /// Overridden in subclasses to return an enumerated constant that identifies the element type. 
         /// </summary>
+        [JsonIgnore]
         public abstract ElementType Type { get; }
 
         /// <summary>
