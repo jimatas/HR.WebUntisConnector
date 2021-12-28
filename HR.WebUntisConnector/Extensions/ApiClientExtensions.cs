@@ -71,14 +71,14 @@ namespace HR.WebUntisConnector.Extensions
             foreach (var period in (await apiClient.GetSchoolYearsAsync(cancellationToken).ConfigureAwait(false)).ToDateTimeRanges(startDate, endDate))
             {
                 await RemapElementIdForPeriodAsync(period).ConfigureAwait(false);
-                ((ICollection<int>)elementIds).Add(elementId);
+                elementIds.Add(elementId);
 
                 timetables.AddRange(await GetTimetablesForPeriodAsync(period).ConfigureAwait(false));
             }
 
             return (Timetables: timetables.OrderBy(table => table.Date).ThenBy(table => table.StartTime), ElementIds: elementIds);
 
-            // Remaps the element ID of a Klasse object so that it is valid in other school years as well.
+            // Remaps the element ID of a Klasse object so that it can be found in other school years as well as in its own.
             async Task RemapElementIdForPeriodAsync(DateTimeRange period)
             {
                 if (elementType == ElementType.Klasse)
