@@ -23,7 +23,7 @@ namespace HR.WebUntisConnector.Model
 
         /// <summary>
         /// A string that identifies the client that is being connected with.
-        /// Default value is <c>HR.WebUntisConnector.Client</c>.
+        /// Default value is <c>HR.WebUntisConnector.ApiClient</c>.
         /// </summary>
         public string Client { get; set; } = "HR.WebUntisConnector.ApiClient";
     }
