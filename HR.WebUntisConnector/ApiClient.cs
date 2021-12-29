@@ -4,6 +4,8 @@
 using HR.WebUntisConnector.Infrastructure;
 using HR.WebUntisConnector.Model;
 
+using Microsoft.Extensions.Caching.Memory;
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -17,13 +19,21 @@ namespace HR.WebUntisConnector
     public class ApiClient : IApiClient
     {
         private readonly JsonRpcClient jsonRpcClient;
+        private readonly IMemoryCache memoryCache;
+        private readonly TimeSpan cacheDuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient"/> class.
         /// </summary>
-        /// <param name="jsonRpcClient">The JSON-RPC client to use for connecting to the WebUntis API and calling its methods.</param>
-        public ApiClient(JsonRpcClient jsonRpcClient)
-            => this.jsonRpcClient = jsonRpcClient ?? throw new ArgumentNullException(nameof(jsonRpcClient));
+        /// <param name="jsonRpcClient">The JSON-RPC client to connect to the WebUntis API with.</param>
+        /// <param name="memoryCache">The memory cache to cache the results of parameterless API methods in.</param>
+        /// <param name="cacheDuration">The duration for which to cache the results. A value of <see cref="TimeSpan.Zero"/>, or less, disables caching.</param>
+        public ApiClient(JsonRpcClient jsonRpcClient, IMemoryCache memoryCache, TimeSpan cacheDuration)
+        {
+            this.jsonRpcClient = jsonRpcClient ?? throw new ArgumentNullException(nameof(jsonRpcClient));
+            this.memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+            this.cacheDuration = cacheDuration;
+        }
 
         /// <inheritdoc/>
         public bool IsAuthenticated { get; private set; }
@@ -73,7 +83,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return DateTimeOffset.FromUnixTimeMilliseconds(await GetResultAsync<long>("getLatestImportTime", cancellationToken).ConfigureAwait(false)).LocalDateTime;
+            return DateTimeOffset.FromUnixTimeMilliseconds(await GetOrCreateCachedResultAsync<long>("getLatestImportTime", cancellationToken).ConfigureAwait(false)).LocalDateTime;
         }
 
         /// <inheritdoc/>
@@ -81,7 +91,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Department>>("getDepartments", cancellationToken).ConfigureAwait(false);
+            return await GetOrCreateCachedResultAsync<IEnumerable<Department>>("getDepartments", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -89,7 +99,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Teacher>>("getTeachers", cancellationToken).ConfigureAwait(false);
+            return await GetOrCreateCachedResultAsync<IEnumerable<Teacher>>("getTeachers", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -97,7 +107,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Student>>("getStudents", cancellationToken).ConfigureAwait(false);
+            return await GetOrCreateCachedResultAsync<IEnumerable<Student>>("getStudents", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -105,7 +115,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Klasse>>("getKlassen", cancellationToken).ConfigureAwait(false);
+            return await GetOrCreateCachedResultAsync<IEnumerable<Klasse>>("getKlassen", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -121,7 +131,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Room>>("getRooms", cancellationToken).ConfigureAwait(false);
+            return await GetOrCreateCachedResultAsync<IEnumerable<Room>>("getRooms", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -129,7 +139,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Subject>>("getSubjects", cancellationToken).ConfigureAwait(false);
+            return await GetOrCreateCachedResultAsync<IEnumerable<Subject>>("getSubjects", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -137,7 +147,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<Holiday>>("getHolidays", cancellationToken).ConfigureAwait(false);
+            return await GetOrCreateCachedResultAsync<IEnumerable<Holiday>>("getHolidays", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -145,7 +155,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<SchoolYear>>("getSchoolyears", cancellationToken).ConfigureAwait(false);
+            return await GetOrCreateCachedResultAsync<IEnumerable<SchoolYear>>("getSchoolyears", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -153,7 +163,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<SchoolYear>("getCurrentSchoolyear", cancellationToken).ConfigureAwait(false);
+            return await GetOrCreateCachedResultAsync<SchoolYear>("getCurrentSchoolyear", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -161,7 +171,7 @@ namespace HR.WebUntisConnector
         {
             EnsureAuthenticated();
 
-            return await GetResultAsync<IEnumerable<TimegridUnits>>("getTimegridUnits", cancellationToken).ConfigureAwait(false);
+            return await GetOrCreateCachedResultAsync<IEnumerable<TimegridUnits>>("getTimegridUnits", cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -219,6 +229,31 @@ namespace HR.WebUntisConnector
                 }
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Retrieves one or more items of the specified type from WebUntis and stores them in cache, if caching is enabled. 
+        /// If the items to retrieve were already present in the cache, returns those.
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="method"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private async Task<TResult> GetOrCreateCachedResultAsync<TResult>(string method, CancellationToken cancellationToken)
+        {
+            var cacheKey = $"webuntis[{jsonRpcClient.Url}].{method}";
+
+            if (cacheDuration <= TimeSpan.Zero || !memoryCache.TryGetValue(cacheKey, out TResult result))
+            {
+                result = await GetResultAsync<TResult>(method, cancellationToken).ConfigureAwait(false);
+            }
+
+            if (cacheDuration > TimeSpan.Zero)
+            {
+                memoryCache.Set(cacheKey, result, cacheDuration);
+            }
+
+            return result;
         }
     }
 }

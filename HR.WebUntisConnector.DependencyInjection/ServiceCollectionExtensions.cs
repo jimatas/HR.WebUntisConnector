@@ -3,13 +3,12 @@
 
 using HR.WebUntisConnector.Configuration;
 
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
 using System.Configuration;
 using System.Net.Http;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace HR.WebUntisConnector.DependencyInjection
 {
@@ -43,19 +42,14 @@ namespace HR.WebUntisConnector.DependencyInjection
                 }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false });
             }
 
+            services.AddMemoryCache();
+
             services.Add(new ServiceDescriptor(
                 serviceType: typeof(IApiClientFactory),
-                provider => new ApiClientFactory(provider.GetRequiredService<IHttpClientFactory>(), CreateDefaultSerializerOptions(), configuration),
+                provider => new ApiClientFactory(provider.GetRequiredService<IHttpClientFactory>(), provider.GetRequiredService<IMemoryCache>(), configuration),
                 serviceLifetime));
 
             return services;
-
-            JsonSerializerOptions CreateDefaultSerializerOptions() => new JsonSerializerOptions(JsonSerializerDefaults.Web)
-            {
-                WriteIndented = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                AllowTrailingCommas = true
-            };
         }
     }
 }
