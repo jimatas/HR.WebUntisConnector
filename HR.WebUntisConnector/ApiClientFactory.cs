@@ -90,7 +90,7 @@ namespace HR.WebUntisConnector
 
             if (string.IsNullOrEmpty(schoolName))
             {
-                throw new ConfigurationErrorsException($"A <school> element with the name \"{schoolOrInstituteName}\" was not found.");
+                throw new ConfigurationErrorsException($"No <school> or <institute> element with the name \"{schoolOrInstituteName}\" has been configured.");
             }
 
             if (string.IsNullOrEmpty(userName))
