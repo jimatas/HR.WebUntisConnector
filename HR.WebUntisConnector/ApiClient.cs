@@ -226,6 +226,7 @@ namespace HR.WebUntisConnector
                 if (exception.ErrorCode == -8520) // Session expired.
                 {
                     IsAuthenticated = false;
+                    throw new UnauthenticatedException("Session expired. You need to log in again!");
                 }
                 throw;
             }
