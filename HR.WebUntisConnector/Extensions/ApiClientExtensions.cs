@@ -53,8 +53,8 @@ namespace HR.WebUntisConnector.Extensions
             => (await apiClient.GetKlassenAsync(new KlasseParameters() { SchoolYearId = schoolYear.Id }, cancellationToken).ConfigureAwait(false)).FirstOrDefault(k => k.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
         /// <summary>
-        /// Retrieves all the timetables for the element with the specified type and ID that fall between the specified start and end dates.
-        /// This method will return all the available information in WebUntis in the retrieved timetables.
+        /// Retrieves all timetables for the element with the specified type and ID that fall between the specified start and end dates.
+        /// This method will return all the available timetable information (bookings, substitutions, etc.) from WebUntis.
         /// </summary>
         /// <param name="apiClient"></param>
         /// <param name="elementType"></param>
@@ -68,25 +68,25 @@ namespace HR.WebUntisConnector.Extensions
             var timetables = new List<Timetable>();
             var elementIds = new HashSet<int>() { elementId };
 
-            foreach (var period in (await apiClient.GetSchoolYearsAsync(cancellationToken).ConfigureAwait(false)).ToDateTimeRanges(startDate, endDate))
+            foreach (var dateRange in (await apiClient.GetSchoolYearsAsync(cancellationToken).ConfigureAwait(false)).ToDateTimeRanges(startDate, endDate))
             {
-                await RemapElementIdForPeriodAsync(period).ConfigureAwait(false);
+                await RemapElementIdAsync(dateRange).ConfigureAwait(false);
                 elementIds.Add(elementId);
 
-                timetables.AddRange(await GetTimetablesForPeriodAsync(period).ConfigureAwait(false));
+                timetables.AddRange(await apiClient.GetTimetablesInternalAsync(elementType, elementId.ToString(), KeyTypes.Id, dateRange, cancellationToken).ConfigureAwait(false));
             }
 
             return (Timetables: timetables.OrderBy(table => table.Date).ThenBy(table => table.StartTime), ElementIds: elementIds);
 
             // Remaps the element ID of a Klasse object so that it can be found in other school years as well as in its own.
-            async Task RemapElementIdForPeriodAsync(DateTimeRange period)
+            async Task RemapElementIdAsync(DateTimeRange dateRange)
             {
                 if (elementType == ElementType.Klasse)
                 {
                     var (klasse, schoolYear) = await apiClient.GetKlasseByIdFromAnySchoolYearAsync(elementId, cancellationToken).ConfigureAwait(false);
-                    if (klasse != null && !schoolYear.ToDateTimeRange().Includes(period))
+                    if (klasse != null && !schoolYear.ToDateTimeRange().Includes(dateRange))
                     {
-                        schoolYear = (await apiClient.GetSchoolYearsAsync(cancellationToken).ConfigureAwait(false)).Single(y => y.ToDateTimeRange().Includes(period));
+                        schoolYear = (await apiClient.GetSchoolYearsAsync(cancellationToken).ConfigureAwait(false)).Single(y => y.ToDateTimeRange().Includes(dateRange));
                         klasse = await apiClient.GetKlasseByNameFromSchoolYearAsync(klasse.Name, schoolYear, cancellationToken).ConfigureAwait(false);
                         if (klasse != null)
                         {
@@ -95,40 +95,68 @@ namespace HR.WebUntisConnector.Extensions
                     }
                 }
             }
+        }
 
-            async Task<IEnumerable<Timetable>> GetTimetablesForPeriodAsync(DateTimeRange period)
+        /// <summary>
+        /// Retrieves all timetables for the element with the specified type and abbreviated name that fall between the specified start and end dates.
+        /// This method will return all the available timetable information (bookings, substitutions, etc.) from WebUntis.
+        /// </summary>
+        /// <param name="apiClient"></param>
+        /// <param name="elementType"></param>
+        /// <param name="elementName"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public static async Task<IEnumerable<Timetable>> GetTimetablesAsync(this IApiClient apiClient, ElementType elementType, string elementName, DateTime startDate, DateTime endDate, CancellationToken cancellationToken = default)
+        {
+            var timetables = new List<Timetable>();
+
+            foreach (var dateRange in (await apiClient.GetSchoolYearsAsync(cancellationToken).ConfigureAwait(false)).ToDateTimeRanges(startDate, endDate))
             {
-                return await apiClient.GetTimetablesAsync(
-                    parameters: new ComprehensiveTimetableParameters()
-                    {
-                        Options = new ComprehensiveTimetableOptions()
-                        {
-                            Element = new ComprehensiveTimetableElement()
-                            {
-                                Id = elementId.ToString(),
-                                KeyType = KeyTypes.Id,
-                                Type = (int)elementType
-                            },
-
-                            ShowOnlyBaseTimetable = false,
-                            ShowLessonNumber = true,
-                            ShowLessonText = true,
-                            ShowBooking = true,
-                            ShowInformation = true,
-                            ShowStudentGroup = true,
-                            ShowSubstitutionText = true,
-
-                            KlasseFields = new[] { ElementFields.Id, ElementFields.Name, ElementFields.LongName },
-                            TeacherFields = new[] { ElementFields.Id, ElementFields.Name, ElementFields.LongName },
-                            RoomFields = new[] { ElementFields.Id, ElementFields.Name, ElementFields.LongName },
-                            SubjectFields = new[] { ElementFields.Id, ElementFields.Name, ElementFields.LongName },
-
-                            StartDate = int.Parse(period.Start.ToString("yyyyMMdd")),
-                            EndDate = int.Parse(period.End.ToString("yyyyMMdd"))
-                        }
-                    }, cancellationToken
-                ).ConfigureAwait(false);
+                timetables.AddRange(await apiClient.GetTimetablesInternalAsync(elementType, elementName, KeyTypes.Name, dateRange, cancellationToken).ConfigureAwait(false));
             }
+
+            return timetables.OrderBy(table => table.Date).ThenBy(table => table.StartTime);
+        }
+
+        private static async Task<IEnumerable<Timetable>> GetTimetablesInternalAsync(this IApiClient apiClient,
+            ElementType elementType,
+            string elementIdOrName,
+            string keyType,
+            DateTimeRange dateRange,
+            CancellationToken cancellationToken)
+        {
+            return await apiClient.GetTimetablesAsync(
+                parameters: new ComprehensiveTimetableParameters()
+                {
+                    Options = new ComprehensiveTimetableOptions()
+                    {
+                        Element = new ComprehensiveTimetableElement()
+                        {
+                            Id = elementIdOrName,
+                            KeyType = keyType,
+                            Type = elementType
+                        },
+
+                        ShowOnlyBaseTimetable = false,
+                        ShowLessonNumber = true,
+                        ShowLessonText = true,
+                        ShowBooking = true,
+                        ShowInformation = true,
+                        ShowStudentGroup = true,
+                        ShowSubstitutionText = true,
+
+                        KlasseFields = new[] { ElementFields.Id, ElementFields.Name, ElementFields.LongName },
+                        TeacherFields = new[] { ElementFields.Id, ElementFields.Name, ElementFields.LongName },
+                        RoomFields = new[] { ElementFields.Id, ElementFields.Name, ElementFields.LongName },
+                        SubjectFields = new[] { ElementFields.Id, ElementFields.Name, ElementFields.LongName },
+
+                        StartDate = int.Parse(dateRange.Start.ToString("yyyyMMdd")),
+                        EndDate = int.Parse(dateRange.End.ToString("yyyyMMdd"))
+                    }
+                }, cancellationToken
+            ).ConfigureAwait(false);
         }
     }
 }

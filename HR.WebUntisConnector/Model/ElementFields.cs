@@ -4,7 +4,7 @@
 namespace HR.WebUntisConnector.Model
 {
     /// <summary>
-    /// Defines constants for the lower-cased field names of an element.
+    /// Defines constants for the lowercased field names of an element.
     /// </summary>
     public static class ElementFields
     {
@@ -14,7 +14,7 @@ namespace HR.WebUntisConnector.Model
         public const string Id = "id";
 
         /// <summary>
-        /// The field that contains the name of the element.
+        /// The field that contains the abbreviated name of the element.
         /// </summary>
         public const string Name = "name";
 

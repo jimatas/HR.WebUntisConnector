@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 namespace HR.WebUntisConnector.Model
 {
     /// <summary>
-    /// Represents an individual student in WebUntis.
+    /// Represents an individual student.
     /// </summary>
     public class Student : Element
     {

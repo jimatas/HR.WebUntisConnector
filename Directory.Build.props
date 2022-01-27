@@ -18,6 +18,7 @@
     <Deterministic>true</Deterministic>
     <NeutralLanguage>en</NeutralLanguage>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <Description>A .NET client for connecting to the WebUntis JSON-RPC service of Rotterdam University of Applied Sciences. Targets .NET Standard 2.0.</Description>

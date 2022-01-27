@@ -14,7 +14,7 @@ namespace HR.WebUntisConnector.Model
         public const string Id = "id";
 
         /// <summary>
-        /// The key is the unique name of the item.
+        /// The key is the abbreviated name of the item.
         /// </summary>
         public const string Name = "name";
 

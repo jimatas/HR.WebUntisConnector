@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 namespace HR.WebUntisConnector.Model
 {
     /// <summary>
-    /// Represents a teacher in WebUntis.
+    /// Represents a teacher or instructor.
     /// </summary>
     public class Teacher : Element
     {

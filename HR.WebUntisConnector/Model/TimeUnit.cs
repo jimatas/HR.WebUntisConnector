@@ -4,7 +4,7 @@
 namespace HR.WebUntisConnector.Model
 {
     /// <summary>
-    /// Represents a timeslot on a timegrid.
+    /// Represents a timeslot on the timegrid.
     /// </summary>
     public class TimeUnit
     {

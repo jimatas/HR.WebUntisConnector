@@ -15,13 +15,12 @@ namespace HR.WebUntisConnector.Model
 
         /// <summary>
         /// The type of element that the <see cref="Id"/> property refers to.
-        /// Use one of the constants defined in the <see cref="ElementType"/> class.
         /// </summary>
-        public int Type { get; set; }
+        public ElementType Type { get; set; }
 
         /// <summary>
         /// Denotes the type of key that is contained in the <see cref="Id"/> property.
-        /// The possible values are <c>id</c> for the primary key in the WebUntis database, <c>name</c> for the element's unique name, or <c>externalkey</c> for its external identifier.
+        /// The possible values are <c>id</c> for the primary key in the WebUntis database, <c>name</c> for the element's abbreviated name, or <c>externalkey</c> for its external identifier.
         /// Use one of the constants defined in the <see cref="KeyTypes"/> class.
         /// Default value is <c>id</c>.
         /// </summary>

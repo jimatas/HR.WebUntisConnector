@@ -26,7 +26,7 @@ namespace HR.WebUntisConnector.Model
         public virtual string ExternalKey { get; set; }
 
         /// <summary>
-        /// The name of this element.
+        /// The abbreviated name of this element.
         /// </summary>
         public virtual string Name { get; set; }
 

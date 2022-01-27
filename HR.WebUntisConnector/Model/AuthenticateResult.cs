@@ -4,7 +4,7 @@
 namespace HR.WebUntisConnector.Model
 {
     /// <summary>
-    /// The result returned by the Authenticate method.
+    /// The result returned by the <c>authenticate</c> method.
     /// </summary>
     public class AuthenticateResult
     {
