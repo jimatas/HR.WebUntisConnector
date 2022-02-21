@@ -4,7 +4,7 @@
 namespace HR.WebUntisConnector.Model
 {
     /// <summary>
-    /// Used to represent a holiday in a timetable.
+    /// Represents a holiday in the timetable.
     /// </summary>
     public class Holiday
     {
