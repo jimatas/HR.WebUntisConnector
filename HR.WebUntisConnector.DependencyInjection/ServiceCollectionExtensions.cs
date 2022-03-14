@@ -39,7 +39,11 @@ namespace HR.WebUntisConnector.DependencyInjection
                 services.AddHttpClient(school.Name, httpClient =>
                 {
                     httpClient.BaseAddress = new Uri(serviceUrl);
-                }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false });
+                })
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    UseCookies = false
+                });
             }
 
             services.AddMemoryCache();
