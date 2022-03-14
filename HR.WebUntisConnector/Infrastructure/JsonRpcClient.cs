@@ -21,7 +21,7 @@ namespace HR.WebUntisConnector.Infrastructure
         private static readonly ProductInfoHeaderValue userAgentHeader;
 
         private readonly HttpClient httpClient;
-        private readonly JsonSerializerOptions serializerOptions;
+        private readonly JsonSerializerOptions jsonOptions;
 
         /// <summary>
         /// Static initializer.
@@ -36,14 +36,14 @@ namespace HR.WebUntisConnector.Infrastructure
         /// Initializes a new instance of the <see cref="JsonRpcClient"/> class.
         /// </summary>
         /// <param name="httpClient">The HTTP client to connect to the JSON-RPC service with.</param>
-        /// <param name="serializerOptions">Options to the JSON serializer.</param>
-        public JsonRpcClient(HttpClient httpClient, JsonSerializerOptions serializerOptions)
+        /// <param name="jsonOptions">Options to the JSON serializer.</param>
+        public JsonRpcClient(HttpClient httpClient, JsonSerializerOptions jsonOptions)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             SetDefaultHeaders(this.httpClient);
 
-            this.serializerOptions = serializerOptions ?? throw new ArgumentNullException(nameof(serializerOptions));
-            AddCustomConverter(this.serializerOptions);
+            this.jsonOptions = jsonOptions ?? throw new ArgumentNullException(nameof(jsonOptions));
+            AddCustomConverter(this.jsonOptions);
         }
 
         /// <summary>
@@ -67,13 +67,14 @@ namespace HR.WebUntisConnector.Infrastructure
         /// If an error occurs on the server, the <see cref="JsonRpcResponse{TResult}.Error"/> property will contain information about the error.</returns>
         public async Task<JsonRpcResponse<TResult>> InvokeAsync<TParams, TResult>(JsonRpcRequest<TParams> jsonRpcRequest, CancellationToken cancellationToken = default)
         {
-            var httpRequest = CreateRequestMessage(jsonRpcRequest);
+            using (var httpRequest = CreateRequestMessage(jsonRpcRequest))
+            using (var httpResponse = await httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false))
+            {
+                httpResponse.EnsureSuccessStatusCode();
 
-            var httpResponse = await httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
-            httpResponse.EnsureSuccessStatusCode();
-
-            var jsonRpcResponse = await httpResponse.Content.ReadFromJsonAsync<JsonRpcResponse<TResult>>(serializerOptions, cancellationToken).ConfigureAwait(false);
-            return jsonRpcResponse;
+                var jsonRpcResponse = await httpResponse.Content.ReadFromJsonAsync<JsonRpcResponse<TResult>>(jsonOptions, cancellationToken).ConfigureAwait(false);
+                return jsonRpcResponse;
+            }
         }
 
         /// <summary>
@@ -126,7 +127,12 @@ namespace HR.WebUntisConnector.Infrastructure
         /// <param name="cancellationToken">The cancellation token to observe.</param>
         /// <returns>An awaitable task that represents the asynchronous operation.</returns>
         public async Task NotifyAsync<TParams>(JsonRpcNotification<TParams> jsonRpcNotification, CancellationToken cancellationToken = default)
-            => (await httpClient.PostAsJsonAsync((Uri)null, jsonRpcNotification, cancellationToken).ConfigureAwait(false)).EnsureSuccessStatusCode();
+        {
+            using (var httpResponse = await httpClient.PostAsJsonAsync((Uri)null, jsonRpcNotification, cancellationToken).ConfigureAwait(false))
+            {
+                httpResponse.EnsureSuccessStatusCode();
+            }
+        }
 
         /// <summary>
         /// Invokes a JSON-RPC method that does not return a result, or the result can be discarded.
