@@ -3,10 +3,10 @@
     <Product>HR.WebUntisConnector</Product>
     <Authors>Jim Atas</Authors>
     <Company>Rotterdam University of Applied Sciences</Company>
-    <Copyright>Copyright (c) 2019-$([System.DateTime]::Now.Year) $(Authors)</Copyright>
+    <Copyright>Copyright (c) 2019-$([System.DateTime]::Now.Year) $(Authors), $(Company)</Copyright>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>2.3.3</Version>
+    <Version>2.3.4</Version>
     <Major>$(Version.Split('.')[0])</Major>
     <Minor>$(Version.Split('.')[1])</Minor>
     <Build>$([System.Math]::Floor($([System.DateTime]::Now.Subtract($([System.DateTime]::Parse("01-01-2000"))).TotalDays)))</Build>
@@ -22,14 +22,11 @@
   </PropertyGroup>
   <PropertyGroup>
     <Description>A .NET client for connecting to the WebUntis JSON-RPC service of Rotterdam University of Applied Sciences. Targets .NET Standard 2.0.</Description>
-    <PackageTags>WebUntis;JSONRPC;API</PackageTags>
+    <PackageTags>webuntis;timetable;jsonrpc;api</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageLicenseFile>License.txt</PackageLicenseFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/jimatas/HR.WebUntisConnector-v2.0</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jimatas/HR.WebUntisConnector-v2.0</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="../License.txt" Pack="True" PackagePath="$(PackageLicenseFile)"/>
-  </ItemGroup>
 </Project>

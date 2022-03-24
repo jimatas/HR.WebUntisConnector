@@ -1,7 +1,4 @@
-﻿// Copyright (c) 2019-2021 Jim Atas, Rotterdam University of Applied Sciences. All rights reserved.
-// This source file is part of WebUntisConnector, which is proprietary software of Rotterdam University of Applied Sciences.
-
-namespace HR.WebUntisConnector.Model
+﻿namespace HR.WebUntisConnector.Model
 {
     /// <summary>
     /// Encapsulates the parameters to the <c>getTimetable</c> method overload that returns a comprehensive timetable.
