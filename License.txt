@@ -1,3 +1,0 @@
-Copyright (c) 2019-2021 Jim Atas, Rotterdam University of Applied Sciences. All rights reserved.
-WebUntisConnector is proprietary software of Rotterdam University of Applied Sciences.
-No warranty, explicit or implicit, provided. In no event shall the author or copyright holder be liable for any claim or damages.
