@@ -240,13 +240,14 @@ namespace HR.WebUntisConnector
         private async Task<TResult> GetOrCreateCachedResultAsync<TResult>(string method, CancellationToken cancellationToken)
         {
             var cacheKey = $"webuntis[{jsonRpcClient.Url}].{method}";
+            var foundInCache = false;
 
-            if (cacheDuration <= TimeSpan.Zero || !memoryCache.TryGetValue(cacheKey, out TResult result))
+            if (cacheDuration <= TimeSpan.Zero || !(foundInCache = memoryCache.TryGetValue(cacheKey, out TResult result)))
             {
                 result = await GetResultAsync<TResult>(method, cancellationToken).ConfigureAwait(false);
             }
 
-            if (cacheDuration > TimeSpan.Zero)
+            if (cacheDuration > TimeSpan.Zero && !foundInCache)
             {
                 memoryCache.Set(cacheKey, result, cacheDuration);
             }
