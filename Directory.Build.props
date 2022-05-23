@@ -6,7 +6,7 @@
     <Copyright>Copyright (c) 2019-$([System.DateTime]::Now.Year) $(Authors), $(Company)</Copyright>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>2.3.5</Version>
+    <Version>2.3.6</Version>
     <Major>$(Version.Split('.')[0])</Major>
     <Minor>$(Version.Split('.')[1])</Minor>
     <Build>$([System.Math]::Floor($([System.DateTime]::Now.Subtract($([System.DateTime]::Parse("01-01-2000"))).TotalDays)))</Build>
@@ -25,8 +25,13 @@
     <PackageTags>webuntis;timetable;jsonrpc;api</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>hr.png</PackageIcon>
+    <PackageIconUrl>https://raw.githubusercontent.com/jimatas/HR.WebUntisConnector/master/hr.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/jimatas/HR.WebUntisConnector</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jimatas/HR.WebUntisConnector</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\hr.png" Pack="true" Visible="false" PackagePath="\"/>
+  </ItemGroup>
 </Project>
